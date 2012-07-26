@@ -25,7 +25,11 @@ function getObstacles(message) {
 
 
 function selectTarget(targets) {
-	return target[0];
+	// TODO smart targeting ..
+	var tops = targets.filter(function(t){
+		return t.topFlop === "top";
+	});
+	return targets[0];
 };
 
 /**
@@ -34,6 +38,7 @@ function selectTarget(targets) {
 function navigate(me,target) {
 
 	var wasd = {
+		msg: "input",
 		w: false,
 		a: false,
 		d: false
@@ -48,11 +53,12 @@ function navigate(me,target) {
 		wasd.d = true; // zoolander style: can't turn left
 	} 
 
-	if (targetAngle - myAngle > Math.PI) {
+	if (targetAngle - myAngle < Math.PI) {
 		// move as soon as it doesn't go backwards
 		wasd.w = true; 
 	}
 	
+	console.log(wasd);
 	return wasd;	
 }
 
