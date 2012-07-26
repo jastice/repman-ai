@@ -36,6 +36,7 @@ window.onload = function() {
 
 
 function joinGame(host, port, name) {
+	myName = name;
 	log("Connecting to " + host + ":" + port + " ...");
 	ws = new WebSocket("ws://" + host + ":" + port);
 
