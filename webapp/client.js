@@ -62,7 +62,6 @@ function joinGame(host, port, name) {
 			
 		case "state":
 			console.log(message);
-			var nearestTargets = calculateDistance(message);
 			ai(message);
 			drawGame(message);
 			break;
