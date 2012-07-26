@@ -7,7 +7,7 @@ function ai(message) {
 
 	var me = getMe(message);
 	var targets = calculateDistance(message);
-	var target = selectTarget(targets);
+	var target = selectTarget(me, targets);
 	
 	ws.send(JSON.stringify(navigate(me, target)));
 
@@ -24,7 +24,7 @@ function getObstacles(message) {
 };
 
 
-function selectTarget(targets) {
+function selectTarget(me, targets) {
 	// TODO smart targeting ..
 	var tops = targets.filter(function(t){
 		return t.topFlop === "top";
@@ -44,7 +44,7 @@ function navigate(me,target) {
 		d: false
 	}
 
-	var myAngle = me.angle % TAU;
+	var myAngle = me.angle % Math.PI;
 	var targetAngle = angle(me.x, me.y, target.x, target.y);
 
 	// super-naive turning algorithm
@@ -56,6 +56,11 @@ function navigate(me,target) {
 	if (targetAngle - myAngle < Math.PI) {
 		// move as soon as it doesn't go backwards
 		wasd.w = true; 
+	}
+
+	if (me.colliding) {
+		wasd.w = true;
+		wasd.d = true;
 	}
 	
 	console.log(wasd);
