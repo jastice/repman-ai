@@ -33,6 +33,10 @@ window.onload = function() {
 	};
 };
 
+function calculateDistance(message) {
+	return [];
+}
+
 function joinGame(host, port, name) {
 	log("Connecting to " + host + ":" + port + " ...");
 	ws = new WebSocket("ws://" + host + ":" + port);
@@ -61,6 +65,7 @@ function joinGame(host, port, name) {
 		case "state":
 			console.log(message);
 			drawGame(message);
+			var nearestTargets = calculateDistance(message);
 			break;
 			
 		default:
@@ -164,10 +169,3 @@ function sendInput() {
 
 var pressed = {};
 
-window.onkeydown = function(event) {
-	pressed[event.keyCode] = true;
-};
-
-window.onkeyup = function(e) {
-	delete pressed[event.keyCode];
-};
