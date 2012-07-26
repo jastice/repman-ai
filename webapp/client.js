@@ -33,6 +33,7 @@ window.onload = function() {
 	};
 };
 
+
 function joinGame(host, port, name) {
 	log("Connecting to " + host + ":" + port + " ...");
 	ws = new WebSocket("ws://" + host + ":" + port);
@@ -53,7 +54,8 @@ function joinGame(host, port, name) {
 
 		case "joined":
 			log("Joined as player " + message.playerIndex);
-			setInterval(sendInput, pollFreq);
+			// setInterval(sendInput, pollFreq);
+			ai(message);
 			canvas.style.display = "block";
 			setupForm.style.display = "none";
 			break;
