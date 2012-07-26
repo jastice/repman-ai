@@ -5,7 +5,8 @@ var ws = null
 , statusP = null
 , setupForm = null
 , joinButton = null
-, canvas = null;
+, canvas = null
+, index=null;
 
 function status(msg) {
 	if (statusP) {
@@ -33,6 +34,19 @@ window.onload = function() {
 	};
 };
 
+function calculateDistance(message) {
+	var a = message.topsFlops.sort(function(a,b){
+		return distance(message.players[index],a) > distance(message.players[index],b);
+	});
+	return a;
+}
+function distance(o1, o2){
+	return distance2(o1.x,o1.y,o2.x,o2.y);
+}
+function distance2(x1, y1, x2, y2) {
+	var d = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+	return d;
+}
 
 function joinGame(host, port, name) {
 	log("Connecting to " + host + ":" + port + " ...");
@@ -54,14 +68,16 @@ function joinGame(host, port, name) {
 
 		case "joined":
 			log("Joined as player " + message.playerIndex);
-			// setInterval(sendInput, pollFreq);
-			ai(message);
+			index = message.playerIndex;
+			setInterval(sendInput, pollFreq);
 			canvas.style.display = "block";
 			setupForm.style.display = "none";
 			break;
 			
 		case "state":
 			console.log(message);
+			var nearestTargets = calculateDistance(message);
+			ai(message);
 			drawGame(message);
 			break;
 			
@@ -165,11 +181,3 @@ function sendInput() {
 }
 
 var pressed = {};
-
-window.onkeydown = function(event) {
-	pressed[event.keyCode] = true;
-};
-
-window.onkeyup = function(e) {
-	delete pressed[event.keyCode];
-};
