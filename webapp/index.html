@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title>RepMan &ndash; Reputation Management reloaded!</title>
+    <style>
+      * {
+      font: 12px Ubuntu;
+      }
+      h1 {
+      font-size: 16px;
+      font-weight: bold;
+      }
+      body {
+      margin: 0;
+      }
+      #setup {
+      box-shadow: 0 10px 10px #aaa;
+      margin: 20px;
+      padding: 20px;
+      }
+      #canvas {
+      border: 2px solid gray;
+      display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="status"></p>
+    <div id="setup">
+
+      <h1>Welcome to RepMan!</h1>
+
+      <p>Type in your info below and click &ldquo;Join&rdquo;</p>
+
+      <label for="name">Name:</label><br/>
+      <input type="text" id="name" value="Playa"/>
+      <br/><br/>
+
+      <label for="host">Host:</label><br/>
+      <input type="text" id="host" value="localhost"/>
+      <br/><br/>
+
+      <label for="port">Port:</label><br/>
+      <input type="text" id="port" value="8888"/>
+      <br/><br/>
+
+      <button id="join">Join</button>
+
+    </div>
+    <canvas id="canvas" width="1024" height="576"></canvas>
+    <script src="client.js"></script>
+  </body>
+</html>
