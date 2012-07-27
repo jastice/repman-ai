@@ -62,7 +62,6 @@ function joinGame(host, port, name) {
 			break;
 			
 		case "state":
-			console.log(message);
 			ai(message);
 			drawGame(message);
 			break;
@@ -101,6 +100,9 @@ function drawGame(state) {
 	// fill background
 	context.fillStyle = "white";
 	context.fillRect(0, 0, canvas.width, canvas.height);
+
+	// draw debug target
+	// context.drawImage(wallImg, debugTarget.x * tileWidth, debugTarget.y * tileWidth);
 
 	// draw walls
 	state.walls.forEach(

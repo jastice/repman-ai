@@ -1,12 +1,15 @@
 var TAU = 2 * Math.PI;
 var ANGULAR_EPSILON = Math.PI / 20;
 
+var debugTarget = {x: 4, y: 4};
+
 function ai(message) {
 	// assess situation ?
 
 	var me = getMe(message);
 	var targets = calculateDistance(message);
 	var target = selectTarget(me, targets);
+	// var target = debugTarget;
 	
 	ws.send(JSON.stringify(navigate(me, target)));
 
@@ -28,7 +31,7 @@ function selectTarget(me, targets) {
 	var tops = targets.filter(function(t){
 		return t.topFlop === "top";
 	});
-	return targets[0];
+	return tops[0];
 };
 
 /**
@@ -41,23 +44,31 @@ function navigate(me,target) {
 		w: false,
 		a: false,
 		d: false
-	}
+	};
 
 	var myAngle = normalizeAngle(me.angle);
 	var targetAngle = normalizeAngle(angle(me.x, me.y, target.x, target.y));
+	var angleDiff = angleDifference(myAngle, targetAngle);
 
-	// super-naive turning algorithm
-	if (Math.abs(targetAngle - myAngle) > ANGULAR_EPSILON) {
-		// TODO determine turn direction
-		wasd.d = true; // zoolander style: can't turn left
+	console.log("    my: " + myAngle + "\ttarget: " + targetAngle + "\tdiff:" + angleDiff);
+	console.log("   pos: " + me.x + ", " + me.y)
+	console.log("target: " + target.x + "," + target.y)
+
+	if (angleDiff > ANGULAR_EPSILON*2) {
+		wasd.d = true;
+	} 
+	else if(angleDiff < -ANGULAR_EPSILON*2) {
+		wasd.a = true;
 	} 
 
-	if (normalizeAngle(targetAngle - myAngle) < Math.PI) {
-		// move as soon as it doesn't go backwards
+	if (angleDiff < Math.PI/2) {
+		// this gives us forwards movement even while turning. also looks cool
 		wasd.w = true; 
 	}
 
 	if (me.colliding) {
+		// Zoolander move: try to break free by turning right and moving forwards
+		wasd.a = false;
 		wasd.w = true;
 		wasd.d = true;
 	}
@@ -65,8 +76,17 @@ function navigate(me,target) {
 	return wasd;	
 }
 
+/**
+	Signed difference between two angles.
+*/
+function angleDifference(a1, a2) {
+	var a = a2 - a1;
+	return a + (a>Math.PI)? -TAU : (a < -Math.PI) ? TAU : 0;
+}
+
 function normalizeAngle(angle) {
-	return (angle % TAU);
+	var n = angle % TAU 
+	return n<0? n+TAU : n;
 }
 
 /**
@@ -76,9 +96,8 @@ function angle(x1,y1,x2,y2) {
 	var dx = x2 - x1;
 	var dy = y2 - y1;
 	
-	var a = Math.atan2(dx,dy); 
-	console.log(a);
-	return a;
+	// weird adjustment for angle use in game
+	return -Math.atan2(dx,dy) + (Math.PI/2); 
 }
 
 
