@@ -61,16 +61,16 @@ function navigate(me,target) {
 		wasd.a = true;
 	} 
 
-	if (angleDiff < Math.PI/2) {
+	if (angleDiff < Math.PI/4) {
 		// this gives us forwards movement even while turning. also looks cool
 		wasd.w = true; 
 	}
 
 	if (me.colliding) {
 		// Zoolander move: try to break free by turning right and moving forwards
-		wasd.a = false;
 		wasd.w = true;
-		wasd.d = true;
+		wasd.a = false;
+		wasd.d = true;			
 	}
 	
 	return wasd;	
@@ -81,7 +81,8 @@ function navigate(me,target) {
 */
 function angleDifference(a1, a2) {
 	var a = a2 - a1;
-	return a + (a>Math.PI)? -TAU : (a < -Math.PI) ? TAU : 0;
+	a += (a>Math.PI)? -TAU : (a < -Math.PI) ? TAU : 0;
+	return a;
 }
 
 function normalizeAngle(angle) {
@@ -99,7 +100,6 @@ function angle(x1,y1,x2,y2) {
 	// weird adjustment for angle use in game
 	return -Math.atan2(dx,dy) + (Math.PI/2); 
 }
-
 
 function calculateDistance(message) {
 	var a = message.topsFlops.sort(function(a,b){
